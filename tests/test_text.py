@@ -294,6 +294,20 @@ def test_highlight_words():
     assert count == 4
 
 
+def test_highlight_words_empty():
+    # An empty word iterable must not build an empty regex (which would
+    # match at every position). https://github.com/Textualize/rich/issues/4229
+    text = Text("abc")
+    count = text.highlight_words([], "red")
+    assert count == 0
+    assert text._spans == []
+
+    text = Text("abc")
+    count = text.highlight_words(iter([]), "red")
+    assert count == 0
+    assert text._spans == []
+
+
 def test_set_length():
     text = Text("Hello")
     text.set_length(5)
