@@ -595,6 +595,38 @@ def test_save_html() -> None:
             assert html == expected
 
 
+def test_save_text_keeps_buffer_when_write_fails() -> None:
+    console = Console(record=True, width=100)
+    console.print("foo")
+    with pytest.raises(OSError):
+        console.save_text(os.path.join("no-such-directory", "rich.txt"))
+    assert console.export_text(clear=False) == "foo\n"
+
+
+def test_save_html_keeps_buffer_when_write_fails() -> None:
+    console = Console(record=True, width=100)
+    console.print("foo")
+    with pytest.raises(OSError):
+        console.save_html(os.path.join("no-such-directory", "example.html"))
+    assert console.export_text(clear=False) == "foo\n"
+
+
+def test_save_svg_keeps_buffer_when_write_fails() -> None:
+    console = Console(record=True, width=100)
+    console.print("foo")
+    with pytest.raises(OSError):
+        console.save_svg(os.path.join("no-such-directory", "example.svg"))
+    assert console.export_text(clear=False) == "foo\n"
+
+
+def test_save_text_clears_buffer_after_successful_write() -> None:
+    console = Console(record=True, width=100)
+    console.print("foo")
+    with tempfile.TemporaryDirectory() as path:
+        console.save_text(os.path.join(path, "rich.txt"))
+    assert console.export_text(clear=False) == ""
+
+
 def test_no_wrap() -> None:
     console = Console(width=10, file=io.StringIO())
     console.print("foo bar baz egg", no_wrap=True)
