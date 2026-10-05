@@ -365,7 +365,7 @@ Here's an example of an alternate screen::
 
 The above code will display a pretty printed dictionary on the alternate screen before returning to the command prompt after 5 seconds.
 
-You can also provide a renderable to :meth:`~rich.console.Console.screen` which will be displayed in the alternate screen when you call :meth:`~rich.ScreenContext.update`.
+You can also provide a renderable to :meth:`~rich.console.Console.screen` which will be displayed in the alternate screen when you call :meth:`~rich.console.ScreenContext.update`.
 
 Here's an example::
 

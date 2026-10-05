@@ -100,9 +100,9 @@ To see a list of all the emojis available, run the following command::
 Rendering Markup
 ----------------
 
-By default, Rich will render console markup when you explicitly pass a string to :meth:`~rich.console.Print.print` or implicitly when you embed a string in another renderable object such as :class:`~rich.table.Table` or :class:`~rich.panel.Panel`.
+By default, Rich will render console markup when you explicitly pass a string to :meth:`~rich.console.Console.print` or implicitly when you embed a string in another renderable object such as :class:`~rich.table.Table` or :class:`~rich.panel.Panel`.
 
-Console markup is convenient, but you may wish to disable it if the syntax clashes with the string you want to print. You can do this by setting ``markup=False`` on the :meth:`~rich.console.Print.print` method or on the :class:`~rich.console.Console` constructor.
+Console markup is convenient, but you may wish to disable it if the syntax clashes with the string you want to print. You can do this by setting ``markup=False`` on the :meth:`~rich.console.Console.print` method or on the :class:`~rich.console.Console` constructor.
 
 
 Markup API
