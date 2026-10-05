@@ -135,6 +135,41 @@ def test_syntax_error():
     assert "SyntaxError" in exception_text
 
 
+def test_syntax_error_non_string_message():
+    # ParseError (a SyntaxError subclass) can carry a non-string message,
+    # e.g. an ExpatError from the pure-Python ElementTree parser. Rendering
+    # must not raise a secondary exception.
+    # https://github.com/Textualize/rich/issues/4225
+    from xml.etree.ElementTree import ParseError
+    from xml.parsers.expat import ExpatError
+
+    console = Console(width=100, file=io.StringIO())
+    try:
+        raise ParseError(ExpatError("syntax error"))
+    except ParseError:
+        console.print_exception()
+    exception_text = console.file.getvalue()
+    assert "ParseError" in exception_text
+
+
+def test_syntax_error_failing_message_str():
+    # A message object whose __str__ raises must not break rendering either.
+    console = Console(width=100, file=io.StringIO())
+
+    class BadMessage:
+        def __str__(self):
+            raise ValueError("str failed")
+
+    try:
+        error = SyntaxError("bad")
+        error.msg = BadMessage()
+        raise error
+    except SyntaxError:
+        console.print_exception()
+    exception_text = console.file.getvalue()
+    assert "SyntaxError" in exception_text
+
+
 def test_nested_exception():
     console = Console(width=100, file=io.StringIO())
     value_error_message = "ValueError because of ZeroDivisionError"
