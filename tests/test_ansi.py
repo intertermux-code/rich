@@ -102,3 +102,20 @@ def test_decode_newlines():
     assert Text.from_ansi("Hello\nWorld\n").plain == "Hello\nWorld\n"
     assert Text.from_ansi("Hello\nWorld\n\n").plain == "Hello\nWorld\n\n"
     assert Text.from_ansi("\nHello\nWorld\n\n").plain == "\nHello\nWorld\n\n"
+
+
+def test_nul_between_esc_and_bracket():
+    """A NUL (or other C0 control) between ESC and "[" must not smuggle
+    an escape sequence past ANSI detection.
+    Regression test for https://github.com/Textualize/rich/issues/4233
+    """
+    # The smuggled sequence is consumed as ANSI, so no raw bytes survive
+    assert Text.from_ansi("\x1b\x00[2J").plain == ""
+    assert Text.from_ansi("\x1b\x00\x01[2J").plain == ""
+    # A smuggled SGR sequence is interpreted as a style, not passed through
+    text = Text.from_ansi("\x1b\x00[31mhello")
+    assert text.plain == "hello"
+    assert "\x1b" not in text.plain and "\x00" not in text.plain
+    assert text.spans == Text.from_ansi("\x1b[31mhello").spans
+    # Plain NULs are stripped
+    assert Text.from_ansi("a\x00b").plain == "ab"

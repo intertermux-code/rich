@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from .console import Console, ConsoleOptions, RenderResult
 
 STRIP_CONTROL_CODES: Final = [
+    0,  # Nul
     7,  # Bell
     8,  # Backspace
     11,  # Vertical tab

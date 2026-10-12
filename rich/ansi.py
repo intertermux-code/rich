@@ -11,7 +11,9 @@ re_ansi = re.compile(
     r"""
 (?:\x1b[0-?])|
 (?:\x1b\](.*?)\x1b\\)|
-(?:\x1b([(@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))
+# A C0 control (e.g. NUL) may appear between ESC and the sequence body;
+# match it here so such bytes can't smuggle a sequence past detection.
+(?:\x1b[\x00-\x1f]*([(@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))
 """,
     re.VERBOSE,
 )
