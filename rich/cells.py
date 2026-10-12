@@ -334,6 +334,10 @@ def chop_cells(text: str, width: int, unicode_version: str = "auto") -> list[str
         A list of strings such that each string in the list has cell width
         less than or equal to the available width.
     """
+    if width <= 0:
+        # Text cannot be chopped into zero (or negative) width lines;
+        # return it whole instead of raising (e.g. range step of 0).
+        return [text]
     if _is_single_cell_widths(text):
         return [text[index : index + width] for index in range(0, len(text), width)]
     spans, _ = split_graphemes(text, unicode_version)

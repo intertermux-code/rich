@@ -149,6 +149,18 @@ def test_chop_cells_zero_width(text: str, expected: list[str]) -> None:
     assert chop_cells(text, 3) == expected
 
 
+def test_chop_cells_non_positive_width() -> None:
+    """Non-positive widths cannot be chopped into lines; text is returned whole.
+
+    Regression test for https://github.com/Textualize/rich/issues/4234
+    (range() step of 0 raised ValueError for single-cell text).
+    """
+    assert chop_cells("hello", 0) == ["hello"]
+    assert chop_cells("hello", -1) == ["hello"]
+    assert chop_cells("你好", 0) == ["你好"]
+    assert chop_cells("你好", -1) == ["你好"]
+
+
 def test_is_single_cell_widths() -> None:
     # Check _is_single_cell_widths reports correctly
     for character in string.printable:
